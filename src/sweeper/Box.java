@@ -14,7 +14,7 @@ public enum Box
     bomb,
     opened,
     closed,
-    flaged,
+    flagged,
     bombed,
     nobomb;
 

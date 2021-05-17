@@ -12,6 +12,8 @@ public class Ranges
 
     public static void setSize (Coord _size)
     {
+        assert (_size != null);
+
         size = _size;
         allCoords = new ArrayList<Coord>();
         for (int y = 0; y < size.y; y++)
@@ -31,6 +33,8 @@ public class Ranges
 
     static boolean inRange (Coord coord)
     {
+        assert (coord != null);
+
         return coord.x >= 0 && coord.x < size.x &&
                 coord.y >= 0 && coord.y < size.y;
     }
@@ -42,6 +46,8 @@ public class Ranges
 
     static ArrayList<Coord> getCoordsArround (Coord coord)
     {
+        assert (coord != null);
+
         Coord around;
         ArrayList<Coord> list = new ArrayList<Coord>();
         for (int x = coord.x - 1; x <= coord.x + 1; x++)

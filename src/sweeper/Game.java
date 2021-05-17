@@ -11,6 +11,14 @@ public class Game
         return state;
     }
 
+    public Bomb getBomb() {
+        return bomb;
+    }
+
+    public Flag getFlag() {
+        return flag;
+    }
+
     public Game (int cols, int rows, int bombs)
     {
         Ranges.setSize(new Coord(cols, rows));
@@ -52,7 +60,7 @@ public class Game
         switch (flag.get(coord))
         {
             case opened : setOpenedToClosedBoxesAroundNumber(coord);return;
-            case flaged : return;
+            case flagged: return;
             case closed :
                 switch (bomb.get(coord))
                 {
@@ -97,6 +105,8 @@ public class Game
     }
 
 
+    //Если рядом с цифрой n поставлено n флажков, то автоматически открывает остальные граничные к
+    //нажатой цифре клетки
     private void setOpenedToClosedBoxesAroundNumber (Coord coord)
     {
         if (bomb.get(coord) != Box.bomb)

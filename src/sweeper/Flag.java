@@ -26,7 +26,7 @@ class Flag
     {
         switch (flagMap.get(coord))
         {
-            case flaged :
+            case flagged:
                 setClosedToBox (coord);
                 break;
 
@@ -43,7 +43,7 @@ class Flag
 
     public void setFlagedToBomb(Coord coord)
     {
-        flagMap.set(coord, Box.flaged);
+        flagMap.set(coord, Box.flagged);
     }
 
     int getCountClosedBoxes()
@@ -64,7 +64,7 @@ class Flag
 
     void setNobombToFlagedSafeBox(Coord coord)
     {
-        if (flagMap.get(coord) == Box.flaged)
+        if (flagMap.get(coord) == Box.flagged)
             flagMap.set(coord, Box.nobomb);
     }
 
@@ -72,7 +72,7 @@ class Flag
     {
         int count = 0;
         for (Coord around : Ranges.getCoordsArround(coord))
-            if (flagMap.get(around) == Box.flaged)
+            if (flagMap.get(around) == Box.flagged)
                 count++;
         return count;
     }

@@ -21,4 +21,9 @@ public class Coord
         }
         return super.equals(o);
     }
+
+    @Override
+    public String toString() {
+        return x + "," + y;
+    }
 }

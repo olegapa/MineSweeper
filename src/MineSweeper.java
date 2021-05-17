@@ -2,11 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
+import sweeper.*;
 import sweeper.Box;
-import sweeper.Coord;
-import sweeper.Game;
-import sweeper.Ranges;
 
 
 public class MineSweeper extends JFrame
@@ -69,12 +70,25 @@ public class MineSweeper extends JFrame
                 int x = e.getX() / IMAGE_SIZE;
                 int y = e.getY() / IMAGE_SIZE;
                 Coord coord = new Coord(x, y);
+
                 if (e.getButton() == MouseEvent.BUTTON1) // левая кнопка мыши
                     game.pressLeftButton (coord);
+
                 if (e.getButton() == MouseEvent.BUTTON3) // правая кнока мыши
                     game.pressRightButton (coord);
-                if (e.getButton() == MouseEvent.BUTTON2) // средняя кнопка мыши
-                    game.start (); // перезапускаем игру
+
+                if (e.getButton() == MouseEvent.BUTTON2) { // средняя кнопка мыши
+                    Helper h = new Helper();
+                    h.start();
+
+                    try {
+                        if(!h.isInterrupted())
+                            h.join();
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                }
+
                 label.setText(getessage ());
                 panel.repaint(); // после каждого действия мыши перерисовываем панель игры
             }
@@ -118,10 +132,116 @@ public class MineSweeper extends JFrame
 
     // Получаем картинку по имени
     private Image getImage (String name){
+        assert (name != null);
+
         String filename = "img/" + name + ".png";
+
         ImageIcon icon = new ImageIcon(getClass().getResource(filename)); //использование ресурсов (подключить папку с ресурсами)
         return icon.getImage();
 
     }
+
+    public class Helper extends Thread{
+
+        Set<Group> groups;
+
+        public Helper(){
+            groups = new HashSet<>();
+        }
+
+        @Override
+        public void run() {
+            System.out.println("helper started to find solution");
+            if(!help()) {
+                if(!Thread.currentThread().isInterrupted())
+                    bestProbability();
+            }
+        }
+
+        private boolean help(){
+            makeGroups();
+
+            if(!Thread.currentThread().isInterrupted()) {
+                while (true){
+                    int changes = 0;
+                    for(Iterator<Group> it1 = groups.iterator(); it1.hasNext();) {
+                        Group gr1 = it1.next();
+                        for (Iterator<Group> it2 = groups.iterator(); it1.hasNext(); ) {
+                            Group gr2 = it2.next();
+
+                            if (gr1 == gr2)
+                                continue;
+
+                            switch (gr1.compare(gr2)) {
+                                case 1:
+                                    groups.remove(gr1);
+                                    gr1.subtract(gr2);
+                                    groups.add(gr1);
+                                    changes++;
+
+                                    if(it1.hasNext()) {
+                                        gr1 = it1.next();
+                                        continue;
+                                    }
+                                    break;
+                                case 2:
+
+                                case -1:
+                                    groups.remove(gr2);
+                                    gr2.subtract(gr1);
+                                    groups.add(gr2);
+                                    changes++;
+                                    continue;
+
+                                default: break;
+
+                            }
+                        }
+                    }
+                    if(changes == 0)
+                        break;
+                }
+            }
+            return true;
+        }
+
+        private void bestProbability(){
+
+        }
+
+        private void makeGroups() {
+            for(int i = 0; i < COLS; i++){
+                for (int j = 0; j < ROWS; j++){
+                    int finalI = i;
+                    int finalJ = j;
+
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Group group = new Group(new Coord(finalI, finalJ), game);
+                            if(!Thread.currentThread().isInterrupted())
+                                groups.add(group);
+                        }
+                    });
+
+                    thread.start();
+                }
+            }
+            try {
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException e){
+                System.out.println("exeption");
+            }
+
+            for(Group gr: groups){
+                if(gr.getNumbBombs() < 0){
+                    System.out.println("Smth wrong with flags!");
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+     }
 
 }
