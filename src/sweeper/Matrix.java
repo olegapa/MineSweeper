@@ -7,6 +7,7 @@ class Matrix
     Matrix (Box defaultBox)
     {
         matrix = new Box [Ranges.getSize().x] [Ranges.getSize().y];
+
         for (Coord coord : Ranges.getAllCoords())
             matrix [coord.x] [coord.y] = defaultBox;
     }
@@ -15,6 +16,7 @@ class Matrix
     {
         if (Ranges.inRange (coord))
             return matrix [coord.x] [coord.y];
+
         return null;
     }
 

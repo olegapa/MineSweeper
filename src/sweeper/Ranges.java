@@ -16,6 +16,7 @@ public class Ranges
 
         size = _size;
         allCoords = new ArrayList<Coord>();
+
         for (int y = 0; y < size.y; y++)
             for (int x = 0; x < size.x; x++)
                 allCoords.add(new Coord(x,y));
@@ -50,8 +51,10 @@ public class Ranges
 
         Coord around;
         ArrayList<Coord> list = new ArrayList<Coord>();
+
         for (int x = coord.x - 1; x <= coord.x + 1; x++)
             for (int y = coord.y - 1; y <= coord.y + 1; y++)
+
                 if (inRange(around = new Coord(x, y)))
                     if (!around.equals(coord))
                         list.add(around);

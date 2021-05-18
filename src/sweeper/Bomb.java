@@ -35,10 +35,13 @@ class Bomb
         while (true)
         {
             Coord coord = Ranges.getRandomCoord();
+
             if (Box.bomb == bombMap.get(coord))
                 continue;
+
             bombMap.set(new Coord(coord.x, coord.y), Box.bomb);
             incNumbersAroundBomb(coord);
+
             break;
         }
 
@@ -47,6 +50,7 @@ class Bomb
     private void incNumbersAroundBomb (Coord coord)
     {
         for (Coord around : Ranges.getCoordsArround(coord))
+
             if (Box.bomb != bombMap.get(around))
                 bombMap.set(around, bombMap.get(around).getNextNumberBox());
     }

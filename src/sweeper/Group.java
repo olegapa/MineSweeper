@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+
+//Класс, хранящий группу клеток и количество бомб в ней
 public class Group {
-    private int numbBombs;
-    private Set<Coord> boxes;
+    private int numbBombs; //количество бомб
+    private Set<Coord> boxes; // множество клеток
     private boolean wrongFlags;
 
     public void setNumbBombs(int numbBombs) {
@@ -34,6 +36,7 @@ public class Group {
 
         for(Coord i: boxes)
             hash -= i.hashCode();
+
         return hash;
     }
 
@@ -43,13 +46,14 @@ public class Group {
         wrongFlags = false;
     }
 
+    //Конструктор, создающий группу соответствующую клетке, координаты которой были переданы
     public Group(Coord coord, Game game){
         assert (coord != null);
         assert (game != null);
 
         wrongFlags = false;
 
-
+        //Прерываем поток, если клетка соответствующая группе закрыта или открыта, но рядом с ней нет бомб
         if( game.getFlag().get(coord) != Box.opened || game.getBomb().get(coord).getNumber() == 0) {
             Thread.currentThread().interrupt();
             return;
@@ -61,8 +65,11 @@ public class Group {
 
         ArrayList<Coord> around = Ranges.getCoordsArround(coord);
 
+        //Добавляем клетки вокруг опорной в группу, если где-то флаг - то уменьшаем количество мин в группе и
+        //игнорируем эту клетку
         for (Coord i: around){
             assert(i != null);
+
             if (game.getFlag().get(i) == Box.flagged){
                 numbBombs--;
             }
@@ -94,14 +101,17 @@ public class Group {
         //пересекаются
         Set<Coord> p = new HashSet<>(right.getBoxes());
         p.retainAll(boxes);
+
         if(p.isEmpty())
             return 0;
 
         return 2;
     }
 
+    //Вычитает из этого множество другое
     public void subtract(Group right){
         boxes.removeAll(right.getBoxes());
+
         numbBombs -= right.numbBombs;
     }
 
@@ -119,10 +129,12 @@ public class Group {
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        b.append(numbBombs).append(" - ");
-        b.append("(");
+
+        b.append(numbBombs).append(" - (");
+
         for (Coord coord: boxes)
             b.append(coord.toString()).append("; ");
+
         return b.toString() + ")";
     }
 }
