@@ -7,7 +7,7 @@ import java.util.Set;
 public class Group {
     private int numbBombs;
     private Set<Coord> boxes;
-    boolean wrongFlags;
+    private boolean wrongFlags;
 
     public void setNumbBombs(int numbBombs) {
         this.numbBombs = numbBombs;
@@ -23,6 +23,24 @@ public class Group {
 
     public Set<Coord> getBoxes() {
         return boxes;
+    }
+
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+
+        hash = 1001*numbBombs;
+
+        for(Coord i: boxes)
+            hash -= i.hashCode();
+        return hash;
+    }
+
+    public Group(){
+        numbBombs = 0;
+        boxes = null;
+        wrongFlags = false;
     }
 
     public Group(Coord coord, Game game){
@@ -74,12 +92,12 @@ public class Group {
             return -1;
 
         //пересекаются
-        for(Coord i: boxes){
-            if(right.getBoxes().contains(i))
-                return 2;
-        }
+        Set<Coord> p = new HashSet<>(right.getBoxes());
+        p.retainAll(boxes);
+        if(p.isEmpty())
+            return 0;
 
-        return 0;
+        return 2;
     }
 
     public void subtract(Group right){

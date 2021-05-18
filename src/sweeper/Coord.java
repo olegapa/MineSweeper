@@ -12,14 +12,21 @@ public class Coord
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(Object obj)
     {
-        if (o instanceof Coord)
+        if(this == obj)
+            return true;
+
+        if (obj instanceof Coord)
         {
-            Coord to = (Coord)o;
-            return to.x == x && to.y == y;
+            return ((Coord) obj).x == x && ((Coord) obj).y == y;
         }
-        return super.equals(o);
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return x*17 + y*51;
     }
 
     @Override

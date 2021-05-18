@@ -16,9 +16,9 @@ public class MineSweeper extends JFrame
     private JPanel panel;
     private JLabel label;
 
-    private final int COLS = 9; // столбцы
-    private final int ROWS = 9; // строки
-    private final int BOMBS = 10; // количество бомб
+    private final int COLS = 30; // столбцы
+    private final int ROWS = 30; // строки
+    private final int BOMBS = 150; // количество бомб
     private final int IMAGE_SIZE = 30; // размер картинки одинаковый по x и по y
 
     // main...
@@ -158,15 +158,27 @@ public class MineSweeper extends JFrame
             }
         }
 
+        private void deleteEmpty(){
+
+            Group empty = new Group();
+            empty.setNumbBombs(0);
+            empty.setBoxes(new HashSet<Coord>());
+
+            while (groups.contains(empty))
+                groups.remove(empty);
+        }
+
         private boolean help(){
             makeGroups();
 
             if(!Thread.currentThread().isInterrupted()) {
+                deleteEmpty();
                 while (true){
                     int changes = 0;
+                    System.out.println(groups.size());
                     for(Iterator<Group> it1 = groups.iterator(); it1.hasNext();) {
                         Group gr1 = it1.next();
-                        for (Iterator<Group> it2 = groups.iterator(); it1.hasNext(); ) {
+                        for (Iterator<Group> it2 = groups.iterator(); it2.hasNext(); ) {
                             Group gr2 = it2.next();
 
                             if (gr1 == gr2)
@@ -176,33 +188,111 @@ public class MineSweeper extends JFrame
                                 case 1:
                                     groups.remove(gr1);
                                     gr1.subtract(gr2);
-                                    groups.add(gr1);
+                                    if(gr1.getBoxes().size() != 0)
+                                        groups.add(gr1);
+
                                     changes++;
 
-                                    if(it1.hasNext()) {
-                                        gr1 = it1.next();
-                                        continue;
-                                    }
+                                    it1 = groups.iterator();
+                                    gr1 = it1.next();
+                                    it2 = groups.iterator();
                                     break;
-                                case 2:
 
+                                case 2:
+/*                                    crossedGroups(gr1, gr2);
+                                    changes++;
+
+                                    it1 = groups.iterator();
+                                    gr1 = it1.next();
+                                    it2 = groups.iterator();*/
+                                    break;
                                 case -1:
                                     groups.remove(gr2);
                                     gr2.subtract(gr1);
-                                    groups.add(gr2);
+                                    if(gr2.getBoxes().size() != 0)
+                                        groups.add(gr2);
                                     changes++;
-                                    continue;
+
+                                    it1 = groups.iterator();
+                                    gr1 = it1.next();
+                                    it2 = groups.iterator();
+                                    break;
 
                                 default: break;
 
                             }
+
                         }
                     }
                     if(changes == 0)
                         break;
                 }
+
+                for(Group i: groups){
+                    doEvent(i);
+                }
             }
+
+            System.out.println("helper finished");
             return true;
+        }
+
+        private void doEvent(Group i){
+            if (i.getBoxes().size() == 0)
+                return;
+            if(i.getNumbBombs() == 0){
+                for(Coord c: i.getBoxes()){
+                    game.pressLeftButton(c);
+                }
+                return;
+            }
+
+            if(i.getNumbBombs() == i.getBoxes().size()){
+                for(Coord c: i.getBoxes()){
+                    game.pressRightButton(c);
+                }
+            }
+        }
+        private void crossedGroups(Group gr1, Group gr2) {
+            assert (gr1 != null);
+            assert (gr2 != null);
+
+            Group nGr = new Group();
+            nGr.setBoxes(crossCoords(gr1.getBoxes(), gr2.getBoxes()));
+
+            if (gr1.getNumbBombs() < gr2.getNumbBombs()) {
+                nGr.setNumbBombs(gr2.getNumbBombs() - gr1.getBoxes().size() + nGr.getBoxes().size());
+                if (nGr.getNumbBombs() == gr1.getNumbBombs()) {
+                    groups.remove(gr1);
+                    groups.remove(gr2);
+
+                    gr1.subtract(nGr);
+                    gr2.subtract(nGr);
+
+                    groups.add(gr1);
+                    groups.add(gr2);
+                }
+            } else {
+                nGr.setNumbBombs(gr1.getNumbBombs() - gr2.getBoxes().size() + nGr.getBoxes().size());
+                if (nGr.getNumbBombs() == gr2.getNumbBombs()) {
+                    groups.remove(gr1);
+                    groups.remove(gr2);
+
+                    gr1.subtract(nGr);
+                    gr2.subtract(nGr);
+
+                    groups.add(gr1);
+                    groups.add(gr2);
+                }
+
+            }
+            groups.add(nGr);
+        }
+
+        private Set<Coord> crossCoords(Set<Coord> c1, Set<Coord> c2){
+            Set<Coord> ans = new HashSet<>(c1);
+            ans.retainAll(c2);
+            return ans;
         }
 
         private void bestProbability(){
