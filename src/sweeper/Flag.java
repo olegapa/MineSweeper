@@ -1,6 +1,6 @@
 package sweeper;
 
-class Flag
+public class Flag
 {
     private Matrix flagMap;
     private int countOfclosedBoxes;
@@ -75,5 +75,13 @@ class Flag
             if (flagMap.get(around) == Box.flagged)
                 count++;
         return count;
+    }
+
+    public void setAdvised(Coord coord){
+        flagMap.set(coord, Box.advised);
+    }
+
+    public void setClosed(Coord coord){
+        flagMap.set(coord, Box.closed);
     }
 }

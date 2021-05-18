@@ -16,7 +16,8 @@ public enum Box
     closed,
     flagged,
     bombed,
-    nobomb;
+    nobomb,
+    advised;
 
     public Object image;
 

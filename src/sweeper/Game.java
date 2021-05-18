@@ -59,8 +59,7 @@ public class Game
     {
         switch (flag.get(coord))
         {
-            case opened : setOpenedToClosedBoxesAroundNumber(coord);return;
-            case flagged: return;
+            case advised:
             case closed :
                 switch (bomb.get(coord))
                 {
@@ -68,6 +67,14 @@ public class Game
                     case bomb: openBombs (coord); return;
                     default: flag.setOpenedToBox(coord);  return;
                 }
+
+            case opened :
+                setOpenedToClosedBoxesAroundNumber(coord);
+                return;
+
+            case flagged: return;
+
+
 
         }
     }

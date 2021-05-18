@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import sweeper.*;
 import sweeper.Box;
@@ -144,9 +142,11 @@ public class MineSweeper extends JFrame
     public class Helper extends Thread{
 
         Set<Group> groups;
+        boolean helped;
 
         public Helper(){
             groups = new HashSet<>();
+            helped = false;
         }
 
         @Override
@@ -175,7 +175,7 @@ public class MineSweeper extends JFrame
                 deleteEmpty();
                 while (true){
                     int changes = 0;
-                    System.out.println(groups.size());
+
                     for(Iterator<Group> it1 = groups.iterator(); it1.hasNext();) {
                         Group gr1 = it1.next();
                         for (Iterator<Group> it2 = groups.iterator(); it2.hasNext(); ) {
@@ -234,7 +234,7 @@ public class MineSweeper extends JFrame
             }
 
             System.out.println("helper finished");
-            return true;
+            return helped;
         }
 
         private void doEvent(Group i){
@@ -242,6 +242,7 @@ public class MineSweeper extends JFrame
                 return;
             if(i.getNumbBombs() == 0){
                 for(Coord c: i.getBoxes()){
+                    helped = true;
                     game.pressLeftButton(c);
                 }
                 return;
@@ -249,6 +250,7 @@ public class MineSweeper extends JFrame
 
             if(i.getNumbBombs() == i.getBoxes().size()){
                 for(Coord c: i.getBoxes()){
+                    helped = true;
                     game.pressRightButton(c);
                 }
             }
@@ -296,6 +298,72 @@ public class MineSweeper extends JFrame
         }
 
         private void bestProbability(){
+            class Probability{
+                private LinkedList<Double> probabilities;
+                Coord coord;
+
+                public LinkedList<Double> getProbabilities() {
+                    return probabilities;
+                }
+
+                public Coord getCoord() {
+                    return coord;
+                }
+
+                Probability(Coord coord){
+                    this.coord = coord;
+                    probabilities = new LinkedList<>();
+                }
+
+                Probability(Coord coord, double prob){
+                    this.coord = coord;
+                    probabilities = new LinkedList<>();
+                    probabilities.add(prob);
+                }
+
+                public void addProbability(Double p){
+                    probabilities.add(p);
+                }
+
+                public double getSummaryProbability(){
+                    Double ans = (double) 1;
+                    for(Double i: probabilities){
+                        ans *= (1 - i);
+                    }
+                    return ((double) 1) - ans;
+                }
+
+
+            }
+
+            deleteEmpty();
+
+            ArrayList<Probability> probabilities = new ArrayList<>();
+
+            for(Group i: groups){
+                boolean exists = false;
+                for(Coord c: i.getBoxes()){
+                    for (Probability probability : probabilities) {
+                        if (probability.getCoord() == c) {
+                            exists =true;
+                            probability.addProbability(((double) i.getNumbBombs() / (double) i.getBoxes().size()));
+                            break;
+                        }
+                    }
+                    if(!exists)
+                        probabilities.add(new Probability(c, ((double) i.getNumbBombs() / (double) i.getBoxes().size())));
+
+                }
+            }
+
+            Probability temp = probabilities.get(0);
+            for(Probability i: probabilities){
+                if(i.getSummaryProbability() < temp.getSummaryProbability())
+                    temp = i;
+            }
+
+            game.getFlag().setAdvised(temp.coord);
+            System.out.println("Try yellow box");;
 
         }
 
