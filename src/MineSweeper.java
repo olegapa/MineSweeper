@@ -14,8 +14,8 @@ public class MineSweeper extends JFrame
     private JPanel panel;
     private JLabel label;
 
-    private final int COLS = 55; // столбцы
-    private final int ROWS = 32; // строки
+    private final int COLS = 55; //количество столбцов
+    private final int ROWS = 32; //количество строк
     private final int BOMBS = 300; // количество бомб
     private final int IMAGE_SIZE = 30; // размер картинки одинаковый по x и по y
 
@@ -25,7 +25,7 @@ public class MineSweeper extends JFrame
         new MineSweeper();
     }
 
-    //Конструктор, вызываем сразу из main
+    //приватный конструктор, вызываем сразу из main
     private MineSweeper()
     {
         game = new Game(COLS, ROWS, BOMBS);
@@ -44,12 +44,13 @@ public class MineSweeper extends JFrame
         add (label, BorderLayout.SOUTH);
     }
 
-    //Установка панели
+    //Инициализация и установка панели
     private void initPanel (){
         panel = new JPanel() // при инициализации выводим картинки
         {
-            //Метод, вызавающаяся при рисовании картинки
-            @Override
+            //при создании панели создается анонимный класс
+            //Функция, которая вызывается каждый раз, когда нам необходимо  нарисовать изображение
+            @Override //переопределение метода
             protected void paintComponent(Graphics g)
             {
                 super.paintComponent(g);
@@ -111,20 +112,20 @@ public class MineSweeper extends JFrame
     // Настройка фрейма, в котором будет происходить активность.
     private void initFrame ()
     {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //заканчивает работу программы при закрытии окна
-        setTitle("Java Sweeper 2000 Volosatov"); //установка заголовка
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //заканчивает работу программы при закрытии окна, чтобы не было продолжения активности после закрытия окна
+        setTitle("Minesweeper"); //установка заголовка
         setResizable(false); // окно не будет менять размер
         setVisible(true); // устанавливаем, что окно будет видно
-        pack(); //метод из класса JFrame устанавливает размер окна достаточный для отображения
+        pack(); //метод из класса JFrame устанавливает размер окна достаточный для отображения всех элементов
         setIconImage(getImage("icon")); //устанавливаем иконку
         setLocationRelativeTo(null); // Размещаем окно по центру
 
     }
 
-    //Устанавливаем все картинки
+    //Функция для установки всех картинок:
     private void setImages ()
     {
-        for (Box box : Box.values())
+        for (Box box : Box.values())                            //устанавливаем для каждого экземпляра Box изображение
             box.image = getImage(box.name().toLowerCase());
     }
 
@@ -135,6 +136,7 @@ public class MineSweeper extends JFrame
         String filename = "img/" + name + ".png";
 
         ImageIcon icon = new ImageIcon(getClass().getResource(filename)); //использование ресурсов (подключить папку с ресурсами)
+                                                                          //создаем объект типа ImageIcon
         return icon.getImage();
 
     }

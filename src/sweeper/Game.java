@@ -1,5 +1,5 @@
 package sweeper;
-/*hello oleg */
+
 public class Game
 {
     private final Bomb bomb;

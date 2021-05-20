@@ -1,6 +1,6 @@
 package sweeper;
 
-public enum Box
+public enum Box   //перечисление всех видов состояния ячейки
 {
     zero,
     num1,
@@ -19,12 +19,13 @@ public enum Box
     nobomb,
     advised;
 
+    //здесь храним изображение
     public Object image;
 
     Box getNextNumberBox ()
     {
         return Box.values() [this.ordinal() + 1];
-    }
+    } //
 
     int getNumber ()
     {
