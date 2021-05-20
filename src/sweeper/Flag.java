@@ -2,8 +2,8 @@ package sweeper;
 
 public class Flag
 {
-    private Matrix flagMap;
-    private int countOfclosedBoxes;
+    private Matrix flagMap;             //матрица флагов
+    private int countOfclosedBoxes;     //количество закрытых клеток
 
     void start ()
     {
@@ -14,15 +14,15 @@ public class Flag
     Box get (Coord coord)
     {
         return flagMap.get(coord);
-    }
+    }       //получение картинки
 
-    public void setOpenedToBox(Coord coord)
+    public void setOpenedToBox(Coord coord)                     //установка открытой клетки
     {
         flagMap.set(coord, Box.opened);
         countOfclosedBoxes--;
     }
 
-    void toggleFlagedToBox (Coord coord)
+    void toggleFlagedToBox (Coord coord)                    //переключатель флагов
     {
         switch (flagMap.get(coord))
         {
@@ -39,12 +39,12 @@ public class Flag
     private void setClosedToBox(Coord coord)
     {
         flagMap.set(coord, Box.closed);
-    }
+    }   //установка закрытой клетки
 
     public void setFlagedToBomb(Coord coord)
     {
         flagMap.set(coord, Box.flagged);
-    }
+    }  //установка флага на бомбу
 
     int getCountClosedBoxes()
     {
@@ -54,7 +54,7 @@ public class Flag
     void setBombedToBox(Coord coord)
     {
         flagMap.set(coord, Box.bombed);
-    }
+    }    //установка бомбы
 
     void setOpenedToClosedBombBox(Coord coord)
     {

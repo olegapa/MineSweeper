@@ -28,7 +28,7 @@ public class MineSweeper extends JFrame
     //приватный конструктор, вызываем сразу из main
     private MineSweeper()
     {
-        game = new Game(COLS, ROWS, BOMBS);
+        game = new Game(COLS, ROWS, BOMBS);  //экземпляр нашей игры
         game.start();
 
         // установка окна, панели, картинок

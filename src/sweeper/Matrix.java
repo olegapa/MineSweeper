@@ -1,6 +1,6 @@
 package sweeper;
 
-class Matrix
+class Matrix  //двумерный массив, в котором хранятся клетки
 {
     private final Box [] [] matrix;
 

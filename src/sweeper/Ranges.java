@@ -5,12 +5,12 @@ import java.util.Random;
 
 public class Ranges
 {
-    private static Coord size;
-    private static ArrayList<Coord> allCoords;
-    private static final Random random = new Random();
+    private static Coord size;                          //в этой переменной храним координаты
+    private static ArrayList<Coord> allCoords;          //список всех координат
+    private static final Random random = new Random();  //генератор рандомных чисел для заполнения поля
 
 
-    public static void setSize (Coord _size)
+    public static void setSize (Coord _size)            //сеттер с package доступом
     {
         assert (_size != null);
 
@@ -25,14 +25,14 @@ public class Ranges
     public static Coord getSize()
     {
         return size;
-    }
+    }               //получение координат
 
     public static ArrayList<Coord> getAllCoords ()
     {
         return allCoords;
-    }
+    } //получение списка координата
 
-    static boolean inRange (Coord coord)
+    static boolean inRange (Coord coord)                         //вспомогательная функция, определяющая, находится ли клетка в нашем поле
     {
         assert (coord != null);
 
@@ -40,12 +40,13 @@ public class Ranges
                 coord.y >= 0 && coord.y < size.y;
     }
 
+    //получение рандомной координаты
     static Coord getRandomCoord ()
     {
         return new Coord(random.nextInt(size.x), random.nextInt(size.y));
     }
 
-    static ArrayList<Coord> getCoordsArround (Coord coord)
+    static ArrayList<Coord> getCoordsArround (Coord coord)      //получение координат вокруг какой-либо клетки
     {
         assert (coord != null);
 

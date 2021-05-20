@@ -5,14 +5,14 @@ public class Coord
     public int x;
     public int y;
 
-    public Coord (int x, int y)
+    public Coord (int x, int y)             //конструктор
     {
         this.x = x;
         this.y = y;
     }
 
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(Object obj)       //сравниваем координаты друг с другом
     {
         if(this == obj)
             return true;

@@ -3,7 +3,7 @@ package sweeper;
 class Bomb
 {
     private Matrix bombMap;
-    private int totalBombs;
+    private int totalBombs;     //общее количество бомб
 
     Bomb (int totalBombs)
     {
@@ -11,7 +11,7 @@ class Bomb
         fixBombsCount();
     }
 
-    void start()
+    void start()                            //расставляет бомбы
     {
         bombMap = new Matrix(Box.zero);
         for (int j = 0; j < totalBombs; j++)
@@ -23,7 +23,7 @@ class Bomb
         return bombMap.get(coord);
     }
 
-    private void fixBombsCount ()
+    private void fixBombsCount ()                                   //ограничили количество бомб
     {
         int maxBombs = Ranges.getSize().x * Ranges.getSize().y /3;
         if (totalBombs > maxBombs)
@@ -47,11 +47,11 @@ class Bomb
 
     }
 
-    private void incNumbersAroundBomb (Coord coord)
+    private void incNumbersAroundBomb (Coord coord)                     //увеличение чисел вокруг бомбы
     {
         for (Coord around : Ranges.getCoordsArround(coord))
 
-            if (Box.bomb != bombMap.get(around))
+            if (Box.bomb != bombMap.get(around))                        //перебираем все клетки вокруг
                 bombMap.set(around, bombMap.get(around).getNextNumberBox());
     }
 

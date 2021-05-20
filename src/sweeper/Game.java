@@ -1,39 +1,39 @@
 package sweeper;
 
-public class Game
+public class Game           //фасадный класс, занимается всеми внутренними разборками "классов "
 {
-    private final Bomb bomb;
-    private final Flag flag;
+    private final Bomb bomb;  //матрица с бомбами
+    private final Flag flag;  //матрица с флагами
     private GameStat state;
 
-    public GameStat getState()
+    public GameStat getState()  //состояние игры
     {
         return state;
     }
 
-    public Bomb getBomb() {
+    public Bomb getBomb() {   //количество бомб
         return bomb;
     }
 
-    public Flag getFlag() {
+    public Flag getFlag() {   //количество флагов
         return flag;
     }
 
-    public Game (int cols, int rows, int bombs)
+    public Game (int cols, int rows, int bombs)  //конструктор, передаем размер экрана и количество бомб
     {
         Ranges.setSize(new Coord(cols, rows));
         bomb = new Bomb(bombs);
         flag = new Flag();
     }
 
-    public void start ()
+    public void start ()   //метод для запуска игры
     {
         bomb.start();
         flag.start();
         state = GameStat.PLAYED;
     }
 
-    public Box getBox (Coord coord)
+    public Box getBox (Coord coord)  //показывает, что нужно изобразить в том или ином месте экрана
     {
         if (flag.get(coord) == Box.opened)
             return bomb.get(coord);
@@ -41,7 +41,7 @@ public class Game
             return flag.get(coord);
     }
 
-    public void pressLeftButton (Coord coord)
+    public void pressLeftButton (Coord coord)  //нажатие левой кнопки мыши
     {
         if (gameOver ()) return;
 
@@ -100,7 +100,7 @@ public class Game
             openBox(around);
     }
 
-    public void pressRightButton(Coord coord)
+    public void pressRightButton(Coord coord)   //нажатие правой кнопки мыши
     {
         if (gameOver ()) return;
         flag.toggleFlagedToBox (coord);
